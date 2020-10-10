@@ -27,7 +27,7 @@ func (s *Swoosh) EnableLog(level int) {
 	logCallerPrettyfier(s.logger)
 	s.setLogLevel(level)
 
-	if level == TRACE_LEVEL || level == DEBUG_LEVEL {
+	if level == TraceLevel || level == DebugLevel {
 		s.logger.SetReportCaller(true)
 		logCallerPrettyfier(s.logger)
 	}

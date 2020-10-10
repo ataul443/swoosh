@@ -16,58 +16,58 @@ func TestSwoosh_EnableLog(t *testing.T) {
 
 	t.Run("log level should be TRACE and report caller should be on",
 		func(t *testing.T) {
-			sln.EnableLog(TRACE_LEVEL)
+			sln.EnableLog(TraceLevel)
 
 			actualLevel := sln.GetLogLevel()
-			assert.Equalf(t, TRACE_LEVEL, actualLevel, "expected %d, got %d",
-				TRACE_LEVEL, actualLevel)
+			assert.Equalf(t, TraceLevel, actualLevel, "expected %d, got %d",
+				TraceLevel, actualLevel)
 
 			assert.True(t, sln.logger.ReportCaller, "report caller should be on")
 		})
 
 	t.Run("log level should be DEBUG and report caller should be on",
 		func(t *testing.T) {
-			sln.EnableLog(DEBUG_LEVEL)
+			sln.EnableLog(DebugLevel)
 
 			actualLevel := sln.GetLogLevel()
-			assert.Equalf(t, DEBUG_LEVEL, actualLevel, "expected %d, got %d",
-				DEBUG_LEVEL, actualLevel)
+			assert.Equalf(t, DebugLevel, actualLevel, "expected %d, got %d",
+				DebugLevel, actualLevel)
 		})
 
 	t.Run("log level should be INFO and report caller should be of",
 		func(t *testing.T) {
-			sln.EnableLog(INFO_LEVEL)
+			sln.EnableLog(InfoLevel)
 
 			actualLevel := sln.GetLogLevel()
-			assert.Equalf(t, INFO_LEVEL, actualLevel, "expected %d, got %d",
-				INFO_LEVEL, actualLevel)
+			assert.Equalf(t, InfoLevel, actualLevel, "expected %d, got %d",
+				InfoLevel, actualLevel)
 		})
 
 	t.Run("log level should be ERROR and report caller should be of",
 		func(t *testing.T) {
-			sln.EnableLog(ERROR_LEVEL)
+			sln.EnableLog(ErrorLevel)
 
 			actualLevel := sln.GetLogLevel()
-			assert.Equalf(t, ERROR_LEVEL, actualLevel, "expected %d, got %d",
-				ERROR_LEVEL, actualLevel)
+			assert.Equalf(t, ErrorLevel, actualLevel, "expected %d, got %d",
+				ErrorLevel, actualLevel)
 		})
 
 	t.Run("log level should be WARN and report caller should be of",
 		func(t *testing.T) {
-			sln.EnableLog(WARN_LEVEL)
+			sln.EnableLog(WarnLevel)
 
 			actualLevel := sln.GetLogLevel()
-			assert.Equalf(t, WARN_LEVEL, actualLevel, "expected %d, got %d",
-				WARN_LEVEL, actualLevel)
+			assert.Equalf(t, WarnLevel, actualLevel, "expected %d, got %d",
+				WarnLevel, actualLevel)
 		})
 
 	t.Run("log level should be FATAL and report caller should be of",
 		func(t *testing.T) {
-			sln.EnableLog(FATAL_LEVEL)
+			sln.EnableLog(FatalLevel)
 
 			actualLevel := sln.GetLogLevel()
-			assert.Equalf(t, FATAL_LEVEL, actualLevel, "expected %d, got %d",
-				FATAL_LEVEL, actualLevel)
+			assert.Equalf(t, FatalLevel, actualLevel, "expected %d, got %d",
+				FatalLevel, actualLevel)
 		})
 
 	t.Run("log level should be FATAL when unknown level provided",
@@ -75,7 +75,7 @@ func TestSwoosh_EnableLog(t *testing.T) {
 			sln.EnableLog(-1)
 
 			actualLevel := sln.GetLogLevel()
-			assert.Equalf(t, FATAL_LEVEL, actualLevel, "expected %d, got %d",
-				FATAL_LEVEL, actualLevel)
+			assert.Equalf(t, FatalLevel, actualLevel, "expected %d, got %d",
+				FatalLevel, actualLevel)
 		})
 }

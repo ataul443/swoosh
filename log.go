@@ -14,22 +14,22 @@ import (
 
 const (
 	// Log level for fine grained trace level messages.
-	TRACE_LEVEL = iota
+	TraceLevel = iota
 
 	// Log level for fine grained debug level messages.
-	DEBUG_LEVEL
+	DebugLevel
 
-	//_LEVEL Log level for info level messages.
-	INFO_LEVEL
+	// LEVEL Log level for info level messages.
+	InfoLevel
 
 	// Log level for error level messages.
-	ERROR_LEVEL
+	ErrorLevel
 
 	// Log level for warning level messages.
-	WARN_LEVEL
+	WarnLevel
 
 	// Log level for fatal level messages.
-	FATAL_LEVEL
+	FatalLevel
 )
 
 func logCallerPrettyfier(logger *log.Logger) {
@@ -56,19 +56,19 @@ func (s *Swoosh) setLogLevel(level int) {
 func getLogrusLevel(level int) log.Level {
 	var innerLogLevel log.Level
 	switch level {
-	case TRACE_LEVEL:
+	case TraceLevel:
 		innerLogLevel = log.TraceLevel
 
-	case DEBUG_LEVEL:
+	case DebugLevel:
 		innerLogLevel = log.DebugLevel
 
-	case INFO_LEVEL:
+	case InfoLevel:
 		innerLogLevel = log.InfoLevel
 
-	case ERROR_LEVEL:
+	case ErrorLevel:
 		innerLogLevel = log.ErrorLevel
 
-	case WARN_LEVEL:
+	case WarnLevel:
 		innerLogLevel = log.WarnLevel
 
 	default:
@@ -82,22 +82,22 @@ func getSwooshLevel(level log.Level) int {
 	var innerSwooshLevel int
 	switch level {
 	case log.TraceLevel:
-		innerSwooshLevel = TRACE_LEVEL
+		innerSwooshLevel = TraceLevel
 
 	case log.DebugLevel:
-		innerSwooshLevel = DEBUG_LEVEL
+		innerSwooshLevel = DebugLevel
 
 	case log.InfoLevel:
-		innerSwooshLevel = INFO_LEVEL
+		innerSwooshLevel = InfoLevel
 
 	case log.ErrorLevel:
-		innerSwooshLevel = ERROR_LEVEL
+		innerSwooshLevel = ErrorLevel
 
 	case log.WarnLevel:
-		innerSwooshLevel = WARN_LEVEL
+		innerSwooshLevel = WarnLevel
 
 	default:
-		innerSwooshLevel = FATAL_LEVEL
+		innerSwooshLevel = FatalLevel
 	}
 
 	return innerSwooshLevel
