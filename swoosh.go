@@ -10,6 +10,8 @@ import (
 type Swoosh struct {
 	eventHandler EventHandler
 	logger       *log.Logger
+
+	eventLoop *reactor
 }
 
 func ListenAndServe(network, address string,
@@ -19,6 +21,7 @@ func ListenAndServe(network, address string,
 	s := &Swoosh{
 		eventHandler: eventHandler,
 		logger:       logger,
+		eventLoop:    newReactor(eventHandler, logger),
 	}
 	return s, nil
 }
