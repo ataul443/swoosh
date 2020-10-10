@@ -49,15 +49,18 @@ func (s *Swoosh) setLogLevel(level int) {
 		return
 	}
 
+	innerLogLevel := getLogrusLevel(level)
+	s.logger.SetLevel(innerLogLevel)
+}
+
+func getLogrusLevel(level int) log.Level {
 	var innerLogLevel log.Level
 	switch level {
 	case TRACE_LEVEL:
 		innerLogLevel = log.TraceLevel
-		s.logger.SetReportCaller(true)
 
 	case DEBUG_LEVEL:
 		innerLogLevel = log.DebugLevel
-		s.logger.SetReportCaller(true)
 
 	case INFO_LEVEL:
 		innerLogLevel = log.InfoLevel
@@ -65,13 +68,37 @@ func (s *Swoosh) setLogLevel(level int) {
 	case ERROR_LEVEL:
 		innerLogLevel = log.ErrorLevel
 
-	case WARNING_LEVEL:
+	case WARN_LEVEL:
 		innerLogLevel = log.WarnLevel
 
 	default:
 		innerLogLevel = log.FatalLevel
 	}
 
-	s.logger.SetLevel(innerLogLevel)
-	s.logger.Tracef("log level set to %s", innerLogLevel)
+	return innerLogLevel
+}
+
+func getSwooshLevel(level log.Level) int {
+	var innerSwooshLevel int
+	switch level {
+	case log.TraceLevel:
+		innerSwooshLevel = TRACE_LEVEL
+
+	case log.DebugLevel:
+		innerSwooshLevel = DEBUG_LEVEL
+
+	case log.InfoLevel:
+		innerSwooshLevel = INFO_LEVEL
+
+	case log.ErrorLevel:
+		innerSwooshLevel = ERROR_LEVEL
+
+	case log.WarnLevel:
+		innerSwooshLevel = WARN_LEVEL
+
+	default:
+		innerSwooshLevel = FATAL_LEVEL
+	}
+
+	return innerSwooshLevel
 }
