@@ -11,7 +11,7 @@ type Swoosh struct {
 	logger *log.Logger
 }
 
-func Listen(network, address string) (*Swoosh, error) {
+func ListenAndServe(network, address string) (*Swoosh, error) {
 	logger := log.New()
 
 	s := &Swoosh{
