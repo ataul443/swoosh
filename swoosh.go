@@ -33,7 +33,7 @@ func ListenAndServe(network, address string,
 		eventHandler: eventHandler,
 		logger:       logger,
 		stdListener:  ln,
-		eventLoop:    newReactor(eventHandler, logger),
+		eventLoop:    newReactor(ln, eventHandler, logger),
 	}
 	return s, nil
 }
