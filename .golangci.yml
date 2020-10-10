@@ -53,7 +53,7 @@ linters:
     - dogsled
     - dupl
     - errcheck
-    - exhaustive
+    # - exhaustive
     - funlen
     - gochecknoinits
     - goconst
@@ -107,4 +107,5 @@ issues:
 run:
   tests: true
   timeout: 1m
-  skip-dirs:
+  skip-files:
+          - ".*_test\\.go$"
