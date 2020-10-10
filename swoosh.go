@@ -4,6 +4,8 @@
 package swoosh
 
 import (
+	"net"
+
 	log "github.com/sirupsen/logrus"
 )
 
@@ -12,15 +14,25 @@ type Swoosh struct {
 	logger       *log.Logger
 
 	eventLoop *reactor
+
+	// do not use it after calling eventLoop.run().
+	// eventLoop will close it as needed.
+	stdListener net.Listener
 }
 
 func ListenAndServe(network, address string,
 	eventHandler EventHandler) (*Swoosh, error) {
 	logger := log.New()
 
+	ln, err := net.Listen(network, address)
+	if err != nil {
+		return nil, err
+	}
+
 	s := &Swoosh{
 		eventHandler: eventHandler,
 		logger:       logger,
+		stdListener:  ln,
 		eventLoop:    newReactor(eventHandler, logger),
 	}
 	return s, nil
