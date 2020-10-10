@@ -32,8 +32,8 @@ const (
 	FatalLevel
 )
 
-func logCallerPrettyfier(logger *log.Logger) {
-	logger.Formatter = &log.TextFormatter{
+func logCallerPrettyfier() log.Formatter {
+	return &log.TextFormatter{
 		CallerPrettyfier: func(f *runtime.Frame) (funcName string, file string) {
 			filename := path.Base(f.File)
 			funcName = f.Function[(strings.LastIndex(f.Function, "/") + 1):]
@@ -42,15 +42,6 @@ func logCallerPrettyfier(logger *log.Logger) {
 				filename, f.Line)
 		},
 	}
-}
-
-func (s *Swoosh) setLogLevel(level int) {
-	if s == nil {
-		return
-	}
-
-	innerLogLevel := getLogrusLevel(level)
-	s.logger.SetLevel(innerLogLevel)
 }
 
 func getLogrusLevel(level int) log.Level {

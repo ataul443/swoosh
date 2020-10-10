@@ -14,15 +14,13 @@ func TestSwoosh_EnableLog(t *testing.T) {
 	sln, err := ListenAndServe("tcp", testAddr, nil)
 	assert.NoErrorf(t, err, "is address %s unavailable ?", testAddr)
 
-	t.Run("log level should be TRACE and report caller should be on",
+	t.Run("log level should be TRACE",
 		func(t *testing.T) {
 			sln.EnableLog(TraceLevel)
 
 			actualLevel := sln.GetLogLevel()
 			assert.Equalf(t, TraceLevel, actualLevel, "expected %d, got %d",
 				TraceLevel, actualLevel)
-
-			assert.True(t, sln.logger.ReportCaller, "report caller should be on")
 		})
 
 	t.Run("log level should be DEBUG and report caller should be on",

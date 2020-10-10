@@ -11,29 +11,23 @@ import (
 
 type Swoosh struct {
 	eventHandler EventHandler
-	logger       *log.Logger
-
-	eventLoop *reactor
+	eventLoop    *reactor
 
 	// do not use it after calling eventLoop.run().
 	// eventLoop will close it as needed.
 	stdListener net.Listener
 }
 
-func ListenAndServe(network, address string,
-	eventHandler EventHandler) (*Swoosh, error) {
-	logger := log.New()
-
+func ListenAndServe(network, address string, eh EventHandler) (*Swoosh, error) {
 	ln, err := net.Listen(network, address)
 	if err != nil {
 		return nil, err
 	}
 
 	s := &Swoosh{
-		eventHandler: eventHandler,
-		logger:       logger,
+		eventHandler: eh,
 		stdListener:  ln,
-		eventLoop:    newReactor(ln, eventHandler, logger),
+		eventLoop:    newReactor(ln, eh),
 	}
 	return s, nil
 }
@@ -42,16 +36,14 @@ func ListenAndServe(network, address string,
 // valid swoosh log level. If unknown log level passed it will
 // set the log level to FATAL_LEVEL.
 func (s *Swoosh) EnableLog(level int) {
-	logCallerPrettyfier(s.logger)
-	s.setLogLevel(level)
-
+	log.SetLevel(getLogrusLevel(level))
 	if level == TraceLevel || level == DebugLevel {
-		s.logger.SetReportCaller(true)
-		logCallerPrettyfier(s.logger)
+		log.SetReportCaller(true)
+		log.SetFormatter(logCallerPrettyfier())
 	}
 }
 
 // GetLogLevel returns current log level of swoosh listener.
 func (s *Swoosh) GetLogLevel() int {
-	return getSwooshLevel(s.logger.GetLevel())
+	return getSwooshLevel(log.GetLevel())
 }
