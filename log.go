@@ -26,7 +26,7 @@ const (
 	ERROR_LEVEL
 
 	// Log level for warning level messages.
-	WARNING_LEVEL
+	WARN_LEVEL
 
 	// Log level for fatal level messages.
 	FATAL_LEVEL
