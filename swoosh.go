@@ -22,8 +22,18 @@ func Listen(network, address string) (*Swoosh, error) {
 
 // EnableLog sets log level on the swoosh listener with supplied
 // valid swoosh log level. If unknown log level passed it will
-// set the log level to FATAL_LEVEL
+// set the log level to FATAL_LEVEL.
 func (s *Swoosh) EnableLog(level int) {
 	logCallerPrettyfier(s.logger)
 	s.setLogLevel(level)
+
+	if level == TRACE_LEVEL || level == DEBUG_LEVEL {
+		s.logger.SetReportCaller(true)
+		logCallerPrettyfier(s.logger)
+	}
+}
+
+// GetLogLevel returns current log level of swoosh listener.
+func (s *Swoosh) GetLogLevel() int {
+	return getSwooshLevel(s.logger.GetLevel())
 }
