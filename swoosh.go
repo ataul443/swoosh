@@ -8,14 +8,17 @@ import (
 )
 
 type Swoosh struct {
-	logger *log.Logger
+	eventHandler EventHandler
+	logger       *log.Logger
 }
 
-func ListenAndServe(network, address string) (*Swoosh, error) {
+func ListenAndServe(network, address string,
+	eventHandler EventHandler) (*Swoosh, error) {
 	logger := log.New()
 
 	s := &Swoosh{
-		logger: logger,
+		eventHandler: eventHandler,
+		logger:       logger,
 	}
 	return s, nil
 }
