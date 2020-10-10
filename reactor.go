@@ -51,3 +51,16 @@ func detachFDFromListener(ln net.Listener) (int, error) {
 		return -1, errors.New("unknown listener")
 	}
 }
+
+func (r *reactor) run() error {
+	fd, err := detachFDFromListener(r.listener)
+	if err != nil {
+		return err
+	}
+
+	log.WithField("listenerFD", fd).
+		Trace("successful extraction of fd from listener")
+	r.listenerFD = fd
+
+	return nil
+}
