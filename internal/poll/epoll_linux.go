@@ -9,6 +9,19 @@ import (
 	"golang.org/x/sys/unix"
 )
 
+const (
+
+	// ExceptionEvents represents problematic epoll events.
+	ExceptionEvents = unix.EPOLLPRI | unix.EPOLLRDHUP | unix.EPOLLHUP |
+		unix.EPOLLERR
+
+	// ReadEvents represents read epoll events.
+	ReadEvents = unix.EPOLLIN | ExceptionEvents
+
+	// WriteEvents represents write epoll events.
+	WriteEvents = unix.EPOLLOUT | ExceptionEvents
+)
+
 // Poller is responsible for watching file descriptors for events.
 type Poller struct {
 
