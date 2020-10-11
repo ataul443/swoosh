@@ -1,4 +1,4 @@
-// +build unix
+// +build linux
 
 package snet
 
@@ -8,7 +8,7 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-// Accept accepts a new connection from provided lsitener file descriptor
+// Accept accepts a new connection from provided lsitener file descriptor.
 func Accept(listenerFD int) (connFD int, sockAddr unix.Sockaddr, err error) {
 	connFD, sockAddr, err = unix.Accept(listenerFD)
 	if err != nil {
