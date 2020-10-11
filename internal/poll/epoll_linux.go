@@ -30,22 +30,19 @@ type Poller struct {
 
 	// file descriptor of associated epoll instance.
 	epfd int
-
-	logger *log.Logger
 }
 
 // New returns a newly created poller.
-func New(logger *log.Logger) (*Poller, error) {
+func New() (*Poller, error) {
 	fd, err := unix.EpollCreate1(unix.EPOLL_CLOEXEC)
 	if err != nil {
 		err = os.NewSyscallError("epoll_create1", err)
-		logger.WithError(err).Error("failed to create an epoll instance")
+		log.WithError(err).Error("failed to create an epoll instance")
 		return nil, err
 	}
 
 	p := &Poller{
-		epfd:   fd,
-		logger: logger,
+		epfd: fd,
 	}
 
 	return p, nil
@@ -61,11 +58,11 @@ func (p *Poller) AddRead(fd int) error {
 
 	if err != nil {
 		err = os.NewSyscallError("epoll_ctl", err)
-		p.logger.WithError(err).WithField("fd", fd).
+		log.WithError(err).WithField("fd", fd).
 			Warn("failed to add in epoll's interest list with read event")
 	}
 
-	p.logger.WithField("fd", fd).
+	log.WithField("fd", fd).
 		Trace("added to epoll's interest list with read event")
 	return err
 }
