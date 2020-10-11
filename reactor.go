@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net"
 
+	"github.com/ataul443/swoosh/internal/snet"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -12,12 +13,15 @@ type reactor struct {
 
 	listener   net.Listener
 	listenerFD int
+
+	connections map[int]Conn
 }
 
 func newReactor(ln net.Listener, eventHandler EventHandler) *reactor {
 	el := &reactor{
 		eventHandler: eventHandler,
 		listener:     ln,
+		connections:  make(map[int]Conn),
 	}
 
 	return el
@@ -61,6 +65,50 @@ func (r *reactor) run() error {
 	log.WithField("listenerFD", fd).
 		Trace("successful extraction of fd from listener")
 	r.listenerFD = fd
+
+	return nil
+}
+
+func (r *reactor) accept() error {
+	connFD, sockAddr, err := snet.Accept(r.listenerFD)
+	if err != nil {
+		log.WithError(err).WithField("listenerFD", r.listenerFD).
+			Error("failed to accept a new connection")
+		return err
+	}
+
+	// get a remote net.Addr from sockAddr
+	remoteAddr, err := snet.SockAddrToAddr(sockAddr)
+	if err != nil {
+		// Only error we can get is of unknown network scheme
+		return err
+	}
+	localAddr := r.listener.Addr()
+
+	c := newTCPConn(connFD, remoteAddr, localAddr)
+	r.connections[connFD] = c
+
+	log.WithFields(log.Fields{
+		"localAddr":  c.localAddr.String(),
+		"remoteAddr": c.remoteAddr.String(),
+		"network":    c.remoteAddr.Network(),
+	}).Trace("accepted a new connection")
+
+	log.WithFields(log.Fields{
+		"localAddr":  c.localAddr.String(),
+		"remoteAddr": c.remoteAddr.String(),
+		"network":    c.remoteAddr.Network(),
+	}).Trace("firing OnConnOpen eventHandler on the connection")
+	// Fire the OnConnOpen handler
+	err = r.eventHandler.OnConnOpen(c)
+	if err != nil {
+		log.WithError(err).WithFields(log.Fields{
+			"localAddr":  c.localAddr.String(),
+			"remoteAddr": c.remoteAddr.String(),
+			"network":    c.remoteAddr.Network(),
+		}).Warn("OnConnOpen eventHandler on the connection  failed")
+		return err
+	}
 
 	return nil
 }
