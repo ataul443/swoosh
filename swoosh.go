@@ -24,10 +24,15 @@ func ListenAndServe(network, address string, eh EventHandler) (*Swoosh, error) {
 		return nil, err
 	}
 
+	el, err := newReactor(ln, eh)
+	if err != nil {
+		return nil, err
+	}
+
 	s := &Swoosh{
 		eventHandler: eh,
 		stdListener:  ln,
-		eventLoop:    newReactor(ln, eh),
+		eventLoop:    el,
 	}
 	return s, nil
 }

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net"
 
+	"github.com/ataul443/swoosh/internal/poll"
 	"github.com/ataul443/swoosh/internal/snet"
 	log "github.com/sirupsen/logrus"
 )
@@ -15,16 +16,23 @@ type reactor struct {
 	listenerFD int
 
 	connections map[int]Conn
+	poller      *poll.Poller
 }
 
-func newReactor(ln net.Listener, eventHandler EventHandler) *reactor {
+func newReactor(ln net.Listener, eventHandler EventHandler) (*reactor, error) {
+	poller, err := poll.New()
+	if err != nil {
+		return nil, err
+	}
+
 	el := &reactor{
 		eventHandler: eventHandler,
 		listener:     ln,
 		connections:  make(map[int]Conn),
+		poller:       poller,
 	}
 
-	return el
+	return el, nil
 }
 
 func detachFDFromListener(ln net.Listener) (int, error) {
