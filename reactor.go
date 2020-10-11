@@ -74,6 +74,27 @@ func (r *reactor) run() error {
 		Trace("successful extraction of fd from listener")
 	r.listenerFD = fd
 
+	// put listener to be polled
+	err = r.poller.AddRead(r.listenerFD)
+	if err != nil {
+		return err
+	}
+
+	// Start polling
+	err = r.poller.Watch(r.processEvent)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *reactor) processEvent(fd int, eventFlags uint32) error {
+	_, connFound := r.connections[fd]
+	if !connFound {
+		return r.accept()
+	}
+
 	return nil
 }
 
