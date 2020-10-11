@@ -3,6 +3,7 @@
 package poll
 
 import (
+	"errors"
 	"os"
 
 	log "github.com/sirupsen/logrus"
@@ -65,4 +66,35 @@ func (p *Poller) AddRead(fd int) error {
 	log.WithField("fd", fd).
 		Trace("added to epoll's interest list with read event")
 	return err
+}
+
+// Watch monitors the epoll for events.
+func (p *Poller) Watch(processEventFn func(fd int, eFlags uint32) error) error {
+	if p == nil {
+		return errors.New("nil poller")
+	}
+
+	events := make([]unix.EpollEvent, 100)
+
+	for {
+		eventsGot, err := unix.EpollWait(p.epfd, events, -1)
+		if err != nil {
+			if err == unix.EINTR {
+				// No connections are ready for read or write, try again
+				continue
+			}
+			err = os.NewSyscallError("epoll_wait", err)
+			log.WithError(err).Errorf("failed to watch on epoll fd: %d", p.epfd)
+			return err
+		}
+
+		events = events[:eventsGot]
+
+		for _, e := range events {
+			err = processEventFn(int(e.Fd), e.Events)
+			if err != nil {
+				return err
+			}
+		}
+	}
 }
