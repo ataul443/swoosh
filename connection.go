@@ -9,7 +9,13 @@ import (
 )
 
 // Conn represents a thread safe client connection.
-type Conn interface{}
+type Conn interface {
+	// LocalAddr returns the local network address
+	LocalAddr() net.Addr
+
+	// RemoteAddr returns the remote network address
+	RemoteAddr() net.Addr
+}
 
 type conn struct {
 	fd int
@@ -33,4 +39,12 @@ func newTCPConn(connFD int, remoteAddr, localAddr net.Addr) *conn {
 	}
 
 	return c
+}
+
+func (c *conn) LocalAddr() net.Addr {
+	return c.localAddr
+}
+
+func (c *conn) RemoteAddr() net.Addr {
+	return c.remoteAddr
 }
