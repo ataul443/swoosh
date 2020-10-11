@@ -18,7 +18,7 @@ type Swoosh struct {
 	stdListener net.Listener
 }
 
-func ListenAndServe(network, address string, eh EventHandler) (*Swoosh, error) {
+func Listen(network, address string, eh EventHandler) (*Swoosh, error) {
 	ln, err := net.Listen(network, address)
 	if err != nil {
 		return nil, err
@@ -34,6 +34,7 @@ func ListenAndServe(network, address string, eh EventHandler) (*Swoosh, error) {
 		stdListener:  ln,
 		eventLoop:    el,
 	}
+
 	return s, nil
 }
 

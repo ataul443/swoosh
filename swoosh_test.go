@@ -11,7 +11,7 @@ const (
 )
 
 func TestSwoosh_EnableLog(t *testing.T) {
-	sln, err := ListenAndServe("tcp", testAddr, nil)
+	sln, err := Listen("tcp", testAddr, nil)
 	assert.NoErrorf(t, err, "is address %s unavailable ?", testAddr)
 
 	t.Run("log level should be TRACE",
