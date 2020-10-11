@@ -38,6 +38,11 @@ func Listen(network, address string, eh EventHandler) (*Swoosh, error) {
 	return s, nil
 }
 
+// Serve will start serving new connections.
+func (s *Swoosh) Serve() error {
+	return s.eventLoop.run()
+}
+
 // EnableLog sets log level on the swoosh listener with supplied
 // valid swoosh log level. If unknown log level passed it will
 // set the log level to FATAL_LEVEL.
