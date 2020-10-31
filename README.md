@@ -1,4 +1,4 @@
-# swoosh
+# swoosh (WIP)
 
 `swoosh` is an high performance, event driven, bare-bone
 networking library which works on transport layer with TCP protocol.
